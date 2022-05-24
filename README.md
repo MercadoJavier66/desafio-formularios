@@ -22,3 +22,7 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+
+#Aviso para el tutor:
+En la Tabla , muestro la contraseña a modo de prueba, entiendo que ese campo no deberia mostrarse.
