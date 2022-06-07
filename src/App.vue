@@ -1,45 +1,32 @@
 <template>
   <div id="app">
-    <Titulo/>
-    <br>
-    <Formulario  @nueva-persona="agregarPersonaTabla"/>
-    <br>
-    <br>
-    <Tabla :persona="personas"/>
+    <nav>
+      <router-link to="/">Tabla de Usuarios</router-link> |
+      <router-link to="/registro">Formulario de Registro</router-link>
+    </nav>
+    <router-view/>
   </div>
 </template>
 
-<script>
-import Tabla from './components/Tabla.vue'
-import Formulario from './components/Formulario.vue'
-import Titulo from './components/Titulo.vue'
-
-
-export default {
-  name: 'App',
-  components: {
-    Titulo,
-    Formulario,
-    Tabla
-  },
-      data() {
-        return {
-            personas: []
-        }
-    },
-    methods: {
-        agregarPersonaTabla(persona) {
-            console.log(persona);
-            const nuevaPersona = {...persona};
-            this.personas.push(nuevaPersona);
-        }
-    }
-}
-</script>
-
 <style>
 #app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  margin-top: 60px;
+  color: #2c3e50;
+}
+
+nav {
+  padding: 30px;
+}
+
+nav a {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+nav a.router-link-exact-active {
+  color: #42b983;
 }
 </style>

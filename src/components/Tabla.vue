@@ -4,19 +4,19 @@
             <thead>
                 <tr>
                     <th>Nombre</th>
-                    <th>Edad</th>
-                    <th>Sexo</th>
+                    <th>Avatar</th>
                     <th>Correo</th>
                     <th>Contraseña</th>
+                    <th>Tipo de Usuario</th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(persona, p) in persona" :key="p">
+                <tr v-for="(persona, p) in $store.state.personas" :key="p">
                     <td>{{persona.nombre}}</td>
-                    <td>{{persona.edad}}</td>
-                    <td>{{persona.sexo}}</td>
-                    <td>{{persona.correo}}</td>
+                    <td><img :src="persona.avatar" width="60"></td>
+                    <td>{{persona.email}}</td>
                     <td>{{persona.contrasena}}</td>
+                    <td>{{persona.tipoUsuario}}</td>
                 </tr>
             </tbody>
         </table>
@@ -24,12 +24,31 @@
 </template>
 
 <script>
+
+import Vue from 'vue'   // in Vue 2
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+
+
+Vue.use(VueAxios, axios)
+
 export default {
-    props: {
-        persona: {
-            type: Array,
-            required: true,
+    data (){
+        return{
+
         }
+    },
+    methods: {
+        async getPersonas(){
+            const personas = await Vue.axios({
+                method: 'get',
+                url: 'https://628ee4bddc47852365360ef5.mockapi.io/api/v1/usuario',
+            });
+            this.$store.state.personas = personas.data
+        },
+    },
+    mounted (){
+        this.getPersonas()
     }
 }
 </script>

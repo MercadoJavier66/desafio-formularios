@@ -6,35 +6,17 @@
                     <label for="nombre" >Nombre y Apellido: </label>
                 </div>
                 <div class="col-9">
-                    <input type="text" id="nombre" placeholder="Ingrese su Nombre y Apellido" class="" @keyup="validarNombre" v-model="persona.nombre"/>
+                    <input type="text" id="nombre" maxlength="15" placeholder="Ingrese su Nombre y Apellido" class="" @keyup="validarNombre" v-model="persona.nombre"/>
                 </div>
                 <div class="row" v-if='nombreValido != ""'>
                     <p class="datoinvalido">{{ nombreValido }}</p>
                 </div>
                  <br>
                 <div class="col-3">
-                    <label for="edad">Edad: </label>
-                </div>
-                <div class="col-9">
-                    <input type="number" id="edad" placeholder="Ingrese su Edad" class="" @keyup="validarEdad" v-model="persona.edad"/>
-                </div>
-                <div class="row" v-if='edadValida != ""'>
-                    <p class="datoinvalido">{{ edadValida }}</p>
-                </div>
-                <br>
-                <div class="row">
-                        <select data-style="btn-danger" class="form-select form-select-lg mb-3"
-                            aria-label="Default select example" v-model="persona.sexo">
-                            <option value="" selected></option>
-                            <option v-for="sexo in listaSexo" :value="sexo.sexo" :key="sexo.id" >{{ sexo.sexo }}</option>
-                        </select>
-                </div>
-                 <br>
-                <div class="col-3">
                     <label for="correo" >Correo Electronico: </label>
                 </div>
                 <div class="col-9">
-                    <input type="text" id="correo" placeholder="Ingrese su correo electronico" class="" @keyup="validarCorreo" v-model="persona.correo"/>
+                    <input type="text" id="correo" maxlength="20" placeholder="Ingrese su correo electronico" class="" @keyup="validarCorreo" v-model="persona.email"/>
                 </div>
                 <div class="row" v-if='correoValido != ""'>
                     <p class="datoinvalido">{{ correoValido }}</p>
@@ -44,7 +26,7 @@
                     <label for="contrasena" >Contraseña: </label>
                 </div>
                 <div class="col-9">
-                    <input type="password" id="contrasena" placeholder="Ingrese su contraseña" class="" @keyup="validarContra" v-model="persona.contrasena"/>
+                    <input type="password" id="contrasena" maxlength="12" placeholder="Ingrese su contraseña" class="" @keyup="validarContra" v-model="persona.contrasena"/>
                 </div>
                 <div class="row" v-if='contrasenaValida != ""'>
                     <p class="datoinvalido">{{ contrasenaValida }}</p>
@@ -59,40 +41,24 @@
 </template>
 
 <script>
+
+import Vue from 'vue'   // in Vue 2
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+
+
+Vue.use(VueAxios, axios)
+
 export default {
+    name: 'Formulario',
     data(){
         return{
             persona: {
-                nombre: "",
-                edad: "",
-                sexo: "",
-                correo: "",
-                contrasena: "",
+
             },
-            listaSexo: [
-                {
-                    id: 'A',
-                    sexo: 'Femenino'
-                },
-                {
-                    id: 'B',
-                    sexo: 'Masculino'
-                },
-                {
-                    id: 'C',
-                    sexo: 'No Binario'
-                },
-                {
-                    id: 'D',
-                    sexo: 'Otros'
-                }
-            ],
             nombreValido: "",
-            edadValida: "",
             correoValido: "",
             contrasenaValida: "",
-
-
         }
     },
     methods: {
@@ -108,7 +74,7 @@ export default {
         },
         validarCorreo() {
             const valcorreo = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
-           if (valcorreo.test(this.persona.correo)){
+           if (valcorreo.test(this.persona.email)){
                 this.correoValido = "";
                 return true;
             } else {
@@ -116,15 +82,6 @@ export default {
                 return false;
             }
 
-        },
-        validarEdad(){
-            if (this.persona.edad >= 18 ){
-                this.edadValida = "";
-                return true;
-            } else {
-                this.edadValida = "ingrese una edad valida, Mayor a 18.";
-                return false;
-            }
         },
         validarContra(){
             let reg_ex_password = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
@@ -137,13 +94,14 @@ export default {
             }
 
         },
-        agregarPersona() {
-            this.$emit('nueva-persona', this.persona);
-            this.persona.nombre = "";
-            this.persona.edad = "";
-            this.persona.sexo = "";
-            this.persona.correo = "";
-            this.persona.contrasena = "";
+        async agregarPersona() {
+             this.persona.tipoUsuario = "cliente"
+            await Vue.axios({
+                  method: 'post',
+                url: 'https://628ee4bddc47852365360ef5.mockapi.io/api/v1/usuario',
+                data: this.persona
+            });
+            this.persona = {}
         },
 
     }
